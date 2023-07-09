@@ -1,0 +1,117 @@
+<head></head>
+
+<body>
+      <input type="email" id="email">
+      <button id="send" disabled onclick="SendI()">Submit</button>
+
+      <!-- Jquery -->
+      <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+      <!-- <script type="text/javascript" src="./node_modules/jquery/dist/jquery.js"></script> -->
+      <!-- integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous" -->
+      <!--  -->
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.0/ethers.umd.min.js"
+            integrity="sha512-+Ftowzj6zmwHlez4gpQxd7QQUzK/ocgu10pukN3Pyqblni7yJ9r/WTpNHoYKL4DGOp5givxSUZjJcVY7Az9OAQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+      <script src="./assets/js/wallet.js"></script>
+      <script src="./assets/js/const.js"></script>
+
+      <script>
+            $(document).ready(() => {
+                  $('#send').removeAttr('disabled');
+
+            })
+            function SendI() {
+                  var daa = {
+                        Name: 'unknown',
+                        Email: document.getElementById('email').value,
+                        Title: 'for Subscription',
+                        Message: 'for Subscription',
+                        Origin: "Test Page"
+                  }
+
+                  console.info(daa)
+                  $.ajax({
+                        url: 'https://api.lenzolab.com/InfoRecs',
+                        type: 'post',
+                        data: JSON.stringify(daa),
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        success: (res) => {
+                              console.info(res)
+                        },
+                        error: (err) => {
+                              console.info(err)
+                        }
+
+                  })
+            }
+            var selectedChainId = 56
+            function checkForWallet(alert) {
+                  console.log('## HERE - 1')
+
+                  if (window.ethereum) {
+                        console.log('## HERE - 2')
+
+                        window.ethereum.enable().then((res) => {
+                              console.log('## HERE - 3')
+                              console.info(res)
+
+                              console.info(window.ethereum)
+                              provider = new ethers.providers.Web3Provider(window.ethereum)
+                              console.info(provider)
+                              walletName = provider.connection.url
+                              console.log('walletName: ' + walletName)
+                              provider.getNetwork().then((nres) => {
+                                    console.log('chain id: ' + nres.chainId)
+
+                                    walletNetworkId = nres.chainId
+                                    signer = provider.getSigner()
+                                    console.info(signer)
+                                    signer.getAddress().then((sres) => {
+                                          console.log('## HERE - 4')
+                                          MyWalletAddress = sres
+                                          //connectButtonChange(walletName)
+
+                                          if (walletNetworkId == selectedChainId) {
+                                                console.log('## HERE - 8 same chain id')
+                                                isWalletConnected = true
+                                                provider.getTransactionReceipt("0xfb62d9e3b21d448b8645944ca2291047022f2904003ae127e3d2a4d3abcb7f0e").then((tres) => {
+                                                      console.log('##1 ----->')
+
+                                                      console.info(tres)
+                                                })
+                                                provider.getTransactionReceipt("0xc583c80dad35c3c00b38abf65f2201aa0a3be127360ff24436d87d72daadaed2").then((tres) => {
+                                                      console.log('##2 ----->')
+                                                      console.info(tres)
+                                                })
+
+
+
+                                                var Contract = new ethers.Contract('0x55d398326f99059ff775485246999027b3197955', ERC20ABI, signer);
+                                                Contract.balanceOf(MyWalletAddress).then((bres) => {
+                                                      console.log('balance: ' + Number(bres._hex) / 10 ** 18)
+                                                })
+                                                //checkAllowance(payTokenAddress, MyWalletAddress, 18, currentPayToken)
+                                          } else {
+                                                console.log('## HERE - 9   diffrent chain id')
+
+                                          }
+                                    })
+                              });
+                        })
+                        //console.log('## HERE - 5')
+
+                  } else {
+                        console.log('## HERE - 6')
+
+                        if (alert) {
+                              console.log('## HERE - 7')
+
+                              window.alert('Wallet not faound.')
+                        }
+                  }
+            }
+      </script>
+</body>

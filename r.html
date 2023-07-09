@@ -1,0 +1,228 @@
+<head>
+      <title>Record detail</title>
+</head>
+
+<body>
+      <style>
+            /* pre {
+                  white-space: pre-wrap;
+                  text-overflow: ellipsis;
+            } */
+            body {
+                  background-color: rgb(78, 69, 80);
+                  color: #ccc;
+                  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            table {
+                  font-size: 1rem;
+
+            }
+
+            pre {
+                  white-space: pre-wrap;
+                  border-top: 1px solid #ccc;
+                  padding: 15px 6px 6px 5px;
+                  margin: 5px;
+                  font-size: 1rem;
+
+            }
+
+            .string {
+                  color: #c3835c;
+            }
+
+            .number {
+                  color: #b5ce82;
+            }
+
+            .boolean {
+                  color: #0b59c9;
+            }
+
+            .null {
+                  color: #0b59c9;
+            }
+
+            .key {
+                  color: #5bcbfe;
+            }
+
+            .id-th {
+                  max-width: 75px;
+                  text-align: justify;
+                  text-justify: inter-word;
+                  word-wrap: break-word;
+                  padding-right: 15px;
+                  cursor: pointer;
+            }
+
+            .timetd {}
+      </style>
+      <div style="text-align: end;"><button id="sepe">Add Seperator</button></div>
+      <table></table>
+
+      <script src="node_modules/jquery/dist/jquery.js"></script>
+      <script src="assets/js/const.js"></script>
+
+      <script>
+            var infos = ''
+
+            $(document).ready(() => {
+
+
+                  //      $.ajax({
+                  //       url:'https:'
+                  //      })
+
+                  $.ajax({
+                        url: baseURL + 'allrecord',
+                        type: 'get',
+                        success: (res) => {
+                              infos = res.data;
+                              let table = document.querySelector("table");
+                              let data = Object.keys(infos[0]);
+                              generateTableHead(table, data);
+                              generateTable(table, infos);
+                        },
+                        error: (res) => {
+                              console.info(res)
+                              window.alert("Error: " + res.statusText)
+                        }
+                  })
+
+                  function generateTableHead(table, data) {
+                        let thead = table.createTHead();
+                        let row = thead.insertRow();
+                        for (let key of data) {
+                              console.log(key)
+                              if (key != '__v' && key != '_id') {
+                                    let th = document.createElement("th");
+                                    let text = document.createTextNode(key);
+                                    th.appendChild(text);
+                                    row.appendChild(th);
+                              }
+                              if (key == '_id') {
+                                    let th = document.createElement("th");
+                                    let text = document.createTextNode(key);
+                                    th.appendChild(text);
+                                    th.classList.add('id-th')
+                                    console.log(th)
+                                    row.appendChild(th);
+                              }
+                        }
+                  }
+                  function generateTable(table, data) {
+                        for (let element of data) {
+                              //console.info(element)
+
+                              if (element.title == "Sep======") {
+                                    var line = (`<div><hr></div>`)
+                                    // $(tbody)
+                                    let row = table.insertRow();
+                                    for (let i = 0; i < 5; i++) {
+                                          let cell = row.insertCell();
+                                          cell.innerHTML = (line);
+                                    }
+                                    let row2 = table.insertRow();
+
+                                    for (let i = 0; i < 5; i++) {
+                                          let cell = row2.insertCell();
+                                          cell.innerHTML = (line);
+                                    }
+
+
+
+                              } else {
+                                    let row = table.insertRow();
+
+                                    for (key in element) {
+                                          let cell = row.insertCell();
+                                          let text = ''
+                                          if (key == 'details') {
+                                                //console.info(element.details)
+                                                cell.innerHTML = (`<td style="max-width:300px;  "> <pre>  ${syntaxHighlight(JSON.stringify(element.details, undefined, 4))} </pre> </td>`)
+                                          } else if (key == '__v') { }
+                                          else {
+                                                var val = element[key]
+
+                                                if (key == 'recordTime') {
+                                                      var valP1 = val.split('T')[0]
+                                                      var valP2 = val.split('T')[1]
+                                                      val = valP1 + ' ' + valP2
+                                                }
+                                                text = document.createTextNode(val);
+
+                                                cell.appendChild(text);
+                                                if (key == '_id') {
+                                                      cell.classList.add('id-th')
+                                                      cell.setAttribute('onclick', `deleteRec('${val}')`)
+                                                }
+
+                                          }
+                                    }
+                              }
+                        }
+                  }
+
+            })
+
+            function syntaxHighlight(json) {
+                  json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                        var cls = 'number';
+                        if (/^"/.test(match)) {
+                              if (/:$/.test(match)) {
+                                    cls = 'key';
+                              } else {
+                                    cls = 'string';
+                                    if (match.length > 100) {
+                                          console.log('+50 for: ' + match)
+                                          var t = match.substring(0, 40) + '.....'
+                                          match = t
+                                    }
+                              }
+                        } else if (/true|false/.test(match)) {
+                              cls = 'boolean';
+                        } else if (/null/.test(match)) {
+                              cls = 'null';
+                        }
+                        return '<span class="' + cls + '">' + match + '</span>';
+                  });
+            }
+            document.getElementById('sepe').addEventListener('click', sendSeperator)
+            function sendSeperator() {
+                  $.ajax({
+                        url: baseURL + 'record/Sep======/======',
+                        type: 'POST',
+                        data: JSON.stringify({}), //headers: { "Content-Type": "application/json" },
+                        dataType: "json",
+                        success: (res) => {
+                              window.location.href = window.location.href
+                        },
+                        error: (res) => {
+                              console.error('Send  sendSeperator Failed.')
+                              console.info(res)
+                        }
+                  })
+            }
+            function deleteRec(id) {
+                  //id = id.split('l')[1]
+                  console.log(id)
+                  var check = window.confirm("Sure to delete id:\n" + id)
+                  if (check) {
+                        $.ajax({
+                              url: 'http://127.0.0.1:3001/delrecord/' + id,
+                              type: 'get',
+                              success: (res) => {
+                                    window.location.href = window.location.href;
+                              },
+                              error: (res) => {
+                                    console.info(res)
+                                    window.alert("Error: " + res.data)
+                              }
+                        })
+                  }
+            }
+      </script>
+</body>

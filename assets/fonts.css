@@ -1,0 +1,26 @@
+@font-face {
+      font-family: 'Detacher';
+      src: URL('../assets/fonts/Detacher\ Regular.ttf') format('truetype');
+}
+
+
+
+@font-face {
+      font-family: 'Orbitron-Black';
+      src: URL('../assets/fonts/Orbitron/Orbitron-Black.ttf') format('truetype');
+}
+
+@font-face {
+      font-family: 'Orbitron-Bold';
+      src: URL('../assets/fonts/Orbitron/Orbitron-Bold.ttf') format('truetype');
+}
+
+@font-face {
+      font-family: 'Orbitron-Regular';
+      src: URL('../assets/fonts/Orbitron/Orbitron-Regular.ttf') format('truetype');
+}
+
+@font-face {
+      font-family: 'Orbitron-Medium';
+      src: URL('../assets/fonts/Orbitron/Orbitron-Medium.ttf') format('truetype');
+}
