@@ -143,10 +143,16 @@
       min-height: 24px;
 }
 
+.glass {
+      background: rgba(255, 255, 255, 0.33);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(6.6px);
+      padding-top: 12px;
+}
+
 .my-body {
       background-color: #001624;
       margin: 0px;
-      padding-top: 12px;
       background-repeat: repeat;
       background-size: cover;
       background-position: center;
