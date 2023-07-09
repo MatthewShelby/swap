@@ -410,7 +410,7 @@ function checkHealth() {
             },
             error: (res) => {
                   console.info(res)
-                  errored('Could Not Connect to the SEVRER.')
+                  errored('\nCould Not Connect to the SEVRER.\n')
             }
       })
 }
@@ -632,9 +632,9 @@ function FixAmount(value, decimals) {
 function connectButtonChange(name) {
       var imgrul = ''
       if (name == 'metamask') {
-            imgrul = './assets/images/icons/mmw.svg'
+            imgrul = './assets/images/Icons/mmw.svg'
       } else {
-            imgrul = './assets/images/icons/Wallet.svg'
+            imgrul = './assets/images/Icons/Wallet.svg'
       }
       document.getElementById('cn-wlt-btn').style.display = 'none'
       document.getElementById('cn-wlt-icon').src = imgrul
