@@ -95,7 +95,7 @@ function getPairPrice(isFor) {
       document.getElementById('fetchedPrice').innerHTML = ''
       var value = Number(document.getElementById('payTokenInput').value) * (10 ** payTokenDecimals);
       if (value == 0) value = (10 ** payTokenDecimals)
-      var furl = `${baseURL}pairPrice/${selectedChain}/${currentPayToken}/${currentReceiveToken}/${value}/0.1`
+      var furl = `${baseURL}pairPrice/${getAddressBySymbol(selectedChain)}/${getAddressBySymbol(currentPayToken)}/${currentReceiveToken}/${value}/0.1`
       console.log('furl: ' + furl)
       console.log('tryfetchPairPrice: ' + tryfetchPairPrice)
       $.ajax({
@@ -519,7 +519,7 @@ function doSwap() {
                   //var inpVal = Number(document.getElementById('payTokenInput').value) * (10 ** payTokenDecimals);//Working here
                   var inpVal = FixAmount(document.getElementById('payTokenInput').value, payTokenDecimals);//Working here
                   var slpg = Number(slippage) * 0.01;
-                  var mnmurl = `${baseURL}pairPrice/${selectedChain}/${currentPayToken}/${currentReceiveToken}/${inpVal}/${slpg}`
+                  var mnmurl = `${baseURL}pairPrice/${getAddressBySymbol(selectedChain)}/${getAddressBySymbol(currentPayToken)}/${currentReceiveToken}/${inpVal}/${slpg}`
                   console.log(mnmurl)
                   var swapReq = {
                         selectedChain: selectedChain,
