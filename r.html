@@ -208,7 +208,9 @@
                   $.ajax({
                         url: baseURL + 'record/Sep======/======',
                         type: 'POST',
-                        data: JSON.stringify({}), //headers: { "Content-Type": "application/json" },
+                        data: JSON.stringify({
+                              ExtraData: "seperator"
+                        }), //headers: { "Content-Type": "application/json" },
                         dataType: "json",
                         success: (res) => {
                               window.location.href = window.location.href
