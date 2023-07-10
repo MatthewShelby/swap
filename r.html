@@ -83,7 +83,7 @@
                         success: (res) => {
                               infos = new Array(res.data.length)
                               for (let i = 0; i < res.data.length; i++) {
-                                    const element = array[i];
+                                    const element = res.data[i];
                                     var newRecord = {
                                           _id: res.data[i]._id,
                                           title: res.data[i].title,
