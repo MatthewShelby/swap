@@ -587,6 +587,7 @@ function recordInfo(title, category, Data) {
             url: baseURL + 'record/' + title + '/' + category,
             type: 'POST',
             data: JSON.stringify(Data),
+            contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: (res) => {
                   // console.log('record for ' + title + ' sent.')
