@@ -1,15 +1,17 @@
+// Web3 variables
 var provider, signer, MyWalletAddress, walletName, walletNetworkId
 var isWalletConnected = false;
 var wNames = new Array();
-var BUSD = '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56'
 
+
+// Connect wallet button
 function connectWallet() {
       console.log('## HERE - 11')
 
       checkForWallet(true)
 }
 
-
+// Main web3 activation function
 function checkForWallet(alert) {
       console.log('## HERE - 1')
 
@@ -78,26 +80,23 @@ function checkForWallet(alert) {
       }
 }
 
-var allowanceAmount = 0;
 
+
+// Check for allowance on a specific token contract
+var allowanceAmount = 0;
 async function allowance(contractAddress, ownerAddress, spenderAddress) {
       console.log('wallet.js allowance 1' + ' & ' + contractAddress + ' & ' + ownerAddress + ' & ' + spenderAddress)
       var Contract = new ethers.Contract(contractAddress, ERC20ABI, signer);
       console.log('wallet.js allowance 2')
-      //return await Contract.allowance(ownerAddress, spenderAddress)
       provider.getCode(contractAddress).then((res) => {
             console.log('wallet.js allowance 3')
             console.info(res.substring(0, 20))
       })
-
-      // Contract.allowance(ownerAddress, spenderAddress).then((res) => {
-      //       console.log('wallet.js allowance 4 allowance amount here')
-      //       console.info(res)
-      //       return  Promise.resolve(res)
-      // })
       return await Contract.allowance(ownerAddress, spenderAddress)
 }
 
+
+// Increase allowance on a specific token contract
 async function approve(contractAddress, spenderAddress, amount) {
       console.log("Approv req: amount: " + amount + '   spender: ' + spenderAddress + '   contract: ' + contractAddress)
       var Contract = new ethers.Contract(contractAddress, ERC20ABI, signer);

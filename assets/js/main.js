@@ -8,11 +8,14 @@ var chainTokens = new Array();
 // Operator contract
 var spenderAddress
 
+
+// Token Information
 var payTokenPrice, receiveTokenPrice, isPriceFetched, isPayPriceFetched, isReceivePriceFetched
 
 var payTokenAddress, payTokenDecimals, receiveTokenAddress, receiveTokenDecimals
 
 
+// Token Price information
 var currentPrice = 0
 var currentPayToken = ''
 var currentReceiveToken = ''
@@ -281,7 +284,6 @@ document.getElementById('receiveTokenInput').addEventListener('focus', () => {
 })
 
 //#region SELECT CHAIN and TOKEN selectoer open BUTTONS
-
 function openChainSelect() {
       setTimeout(() => {
             document.getElementById("myDropdown").classList.toggle("show");
@@ -387,6 +389,9 @@ function slippageSelect(inp) {
       document.getElementById('s5').classList.remove('active')
       document.getElementById('s' + inp).classList.add('active')
 }
+
+
+// adds the UX effect into the slippage choosing div
 function addEf() {
       console.log('pppp')
       $('#os').on("click", function () {
@@ -398,6 +403,8 @@ function addEf() {
       });
 }
 
+
+// checks if the connection to the server is OK
 function checkHealth() {
       var myURL = baseURL + 'health';
       console.log(myURL)
@@ -417,7 +424,7 @@ function checkHealth() {
 var healthy = false;
 
 function checkAllowance(contract, owner, decimals, symbol) {
-      console.log('@@@ tAddress: ' + contract)
+      console.log('Token Address: ' + contract)
       document.getElementById('allowTXT').style.display = 'none'
       document.getElementById('allowWaiting').style.display = 'block'
       console.info(spenderAddress)
@@ -460,7 +467,7 @@ function getChainId() {
       }
 }
 
-
+// alarm if input field iz empty or zero
 function alarmInput(inp) {
       var alOn = false
       var num = 0
@@ -564,7 +571,7 @@ function doSwap() {
                                                       console.info(tres)
                                                       recordInfo('TransactionReceipt', 'Swap', tres);
                                                 })
-                                          }, 6000);
+                                          }, 7000);
 
                                     }).catch((err) => {
                                           console.info(err)
@@ -581,7 +588,7 @@ function doSwap() {
       }
 }
 
-
+// records the information as a log in the server's database
 function recordInfo(title, category, Data) {
       $.ajax({
             url: baseURL + 'record/' + title + '/' + category,
@@ -600,10 +607,12 @@ function recordInfo(title, category, Data) {
       })
 }
 
+
+// This function converts the pay input amount (or any amount) from 1 token to the value in whole desimals
+// Example FixAmount(1.2, 18) => 1200000000000000000
+// in order to fix the inaccuracy of floats, the return value is in string 
 function FixAmount(value, decimals) {
-      //  This must come from caller based on the currency
-      //var decimals = 18;
-      var theVal = value //document.getElementById('payTokenInput').value;
+      var theVal = value
       console.log('theVal ' + theVal)
       var decIndex = -1;
       for (let i = 0; i < theVal.length; i++) {
@@ -630,6 +639,9 @@ function FixAmount(value, decimals) {
       }
       return result
 }
+
+
+// changes the button when wallet been connected
 function connectButtonChange(name) {
       var imgrul = ''
       if (name == 'metamask') {
@@ -643,6 +655,9 @@ function connectButtonChange(name) {
       document.getElementById('wltAdr').innerHTML = MyWalletAddress.substring(0, 4) + '...' + MyWalletAddress.slice(-4)
 }
 
+
+
+// Switch the pay token and the receive token
 var swithching = false
 function switcher() {
       if (!swithching) {
@@ -669,6 +684,8 @@ function switcher() {
       }
 }
 
+
+// this function makes the 1+e12 like amounts to 10000000000000
 function toFixed(x) {
       if (Math.abs(x) < 1.0) {
             var e = parseInt(x.toString().split('e-')[1]);
