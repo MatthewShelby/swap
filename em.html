@@ -2,7 +2,7 @@
 
 <body>
       <input type="email" id="email">
-      <button id="send" disabled onclick="SendI()">Submit</button>
+      <button id="send" disabled onclick="SendPost()">Submit</button>
 
       <!-- Jquery -->
       <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
@@ -35,6 +35,33 @@
                   $.ajax({
                         url: 'https://api.lenzolab.com/InfoRecs',
                         type: 'post',
+                        data: JSON.stringify(daa),
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        success: (res) => {
+                              console.info(res)
+                        },
+                        error: (err) => {
+                              console.info(err)
+                        }
+
+                  })
+            }
+
+
+            function SendPost() {
+                  var daa = {
+                        Name: 'unknown',
+                        Email: document.getElementById('email').value,
+                        Title: 'for Subscription',
+                        Message: 'for Subscription',
+                        Origin: "Test Page"
+                  }
+
+                  console.info(daa)
+                  $.ajax({
+                        url: 'https://localhost:7236/record/FromChrome2/test',
+                        type: 'POST',
                         data: JSON.stringify(daa),
                         dataType: 'json',
                         contentType: "application/json; charset=utf-8",
