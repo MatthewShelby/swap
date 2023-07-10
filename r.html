@@ -81,7 +81,18 @@
                         url: baseURL + 'allrecord',
                         type: 'get',
                         success: (res) => {
-                              infos = res.data;
+                              infos = new Array(res.data.length)
+                              for (let i = 0; i < res.data.length; i++) {
+                                    const element = array[i];
+                                    var newRecord = {
+                                          _id: res.data[i]._id,
+                                          title: res.data[i].title,
+                                          category: res.data[i].category,
+                                          recordTime: res.data[i].recordTime,
+                                          details: res.data[i].details
+                                    }
+                                    infos[i] = newRecord;
+                              }
                               let table = document.querySelector("table");
                               let data = Object.keys(infos[0]);
                               generateTableHead(table, data);
