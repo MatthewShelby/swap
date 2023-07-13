@@ -430,12 +430,11 @@ function checkAllowance(contract, owner, decimals, symbol) {
       console.info(spenderAddress)
       balance(contract, owner).then((res) => {
             console.info(res)
-            //balanceAmount = Number(res._hex).toString()
             balanceAmount = BigInt(res._hex).toString()
             console.log('wallet balance amount: ' + balanceAmount)
             allowance(contract, owner, spenderAddress).then((res) => {
                   console.info(res)
-                  allowanceAmount = (BigInt(res._hex)).toString()
+                  allowanceAmount = BigInt(res._hex).toString()
                   console.log('@@@ Allowance: ' + allowanceAmount)
                   console.log('@@@ balanceAmount: ' + balanceAmount)
 
@@ -844,3 +843,5 @@ function toFixed(x) {
       return x;
 }
 
+
+// V2.3 td
