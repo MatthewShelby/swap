@@ -1,15 +1,17 @@
-Receive Input > on change > chack if turn swap btn should be enable.
+Receive Input > on change > chack if swap btn should be enable.
 Chech Wallet/Provide Network before calls. it must change on SelectChain()
 TO address should dynamicly change to best router address. main.js => #3
-#4=> spender Address is hardcoded. it must be fetched from server or another dynamic way
-#5 The Check Allowance part has been comented. must bee fixed
-#6 record error data in case error has happend
+#4=> spender Address is hardcoded. it must be fetched from server or another dynamic way @Done
+#5 The Check Allowance part has been comented. must bee fixed @Done
+#6 record error data in case error has happend @Done
 #7 Add 3-5 retry in case of error
-#8 Token Decimals 
-#9 Check swap amount is <= allowance
+#8 Token Decimals @Done
+#9 Check swap amount is <= allowance @Done
 #10 MAX button
 #11 say something when approve is done.
-#11 say something when swap is done.
+#12 say something when swap is done.
+#13 **** IMPORTANT: repeat the get call until get responce (in swap and else) ??@onSwap
+#14 Fetch wallet exact balance from contract and check before operation @Done
 
 
 Ideas:

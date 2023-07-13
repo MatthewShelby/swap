@@ -89,10 +89,30 @@ async function allowance(contractAddress, ownerAddress, spenderAddress) {
       var Contract = new ethers.Contract(contractAddress, ERC20ABI, signer);
       console.log('wallet.js allowance 2')
       provider.getCode(contractAddress).then((res) => {
-            console.log('wallet.js allowance 3')
-            console.info(res.substring(0, 20))
+            // console.log('wallet.js allowance 3')
+            // console.info(res.substring(0, 20))
+      }).catch((err) => {
+            console.error(err)
+            window.alert('Wallet newtwork is not set to the selected chain.')
       })
       return await Contract.allowance(ownerAddress, spenderAddress)
+}
+
+
+// Check for balance on a specific token contract
+var balanceAmount = 0;
+async function balance(contractAddress, ownerAddress) {
+      console.log('wallet.js balance 1' + ' & ' + contractAddress + ' & ' + ownerAddress)
+      var Contract = new ethers.Contract(contractAddress, ERC20ABI, signer);
+      console.log('wallet.js balance 2')
+      provider.getCode(contractAddress).then((res) => {
+            // console.log('wallet.js balance 3')
+            // console.info(res.substring(0, 20))
+      }).catch((err) => {
+            console.error(err)
+            window.alert('Wallet newtwork is not set to the selected chain.')
+      })
+      return await Contract.balanceOf(ownerAddress)
 }
 
 

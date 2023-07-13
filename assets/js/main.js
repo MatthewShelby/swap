@@ -108,7 +108,7 @@ function getPairPrice(isFor) {
                   console.log('===####   getPairPrice   ####===')
                   console.info(res)
                   currentPrice = Number(res.data.price)
-                  spenderAddress = res.data.to
+                  spenderAddress = res.data.allowanceTarget
                   isPriceFetched = true
                   document.getElementById('payTokenInput').addEventListener('input', setPayAmount)
                   document.getElementById('receiveTokenInput').addEventListener('input', setReceiveAmount)
@@ -428,26 +428,35 @@ function checkAllowance(contract, owner, decimals, symbol) {
       document.getElementById('allowTXT').style.display = 'none'
       document.getElementById('allowWaiting').style.display = 'block'
       console.info(spenderAddress)
-      allowance(contract, owner, spenderAddress).then((res) => {
+      balance(contract, owner).then((res) => {
             console.info(res)
-            allowanceAmount = Number(res._hex) / 10 ** decimals;
-            console.log('@@@ Allowance: ' + toFixed(allowanceAmount))
-            document.getElementById('allowTXT').style.display = 'block'
-            document.getElementById('allowWaiting').style.display = 'none'
-            document.getElementById('allowanceBtn').addEventListener('click', doApprove)
+            balanceAmount = Number(res._hex).toString()
+            console.log('wallet balance amount: ' + balanceAmount)
+            allowance(contract, owner, spenderAddress).then((res) => {
+                  console.info(res)
+                  allowanceAmount = Number(res._hex).toString()
+                  console.log('@@@ Allowance: ' + toFixed(allowanceAmount))
+                  document.getElementById('allowTXT').style.display = 'block'
+                  document.getElementById('allowWaiting').style.display = 'none'
+                  document.getElementById('allowanceBtn').addEventListener('click', doApprove)
 
-            if (allowanceAmount > 0) {
-                  document.getElementById('allowTXT').innerHTML = `You can Swap up to ${toFixed(allowanceAmount) + ' ' + symbol + 's'}`
-                  document.getElementById('swapBtn').disabled = false;
-                  document.getElementById('swapBtn').addEventListener('click', doSwap)
-                  document.getElementById('allowanceBtn').innerHTML = `+`
-            } else {
-                  document.getElementById('allowTXT').innerHTML = `You need to Set Allowance
+                  if (allowanceAmount > 0) {
+                        var amount = allowanceAmount;
+                        if (Number(balanceAmount) < Number(allowanceAmount)) { amount = balanceAmount }
+                        document.getElementById('allowTXT').innerHTML = `You can Swap up to ${showAmount(amount, decimals) + ' ' + symbol + 's'}`
+                        document.getElementById('swapBtn').disabled = false;
+                        document.getElementById('swapBtn').addEventListener('click', doSwap)
+                        document.getElementById('allowanceBtn').innerHTML = `+`
+                  } else {
+                        document.getElementById('allowTXT').innerHTML = `You need to Set Allowance
                                           <br> for the Operator Contract
                                           <br> On the Paying Currency.`
-                  document.getElementById('swapBtn').disabled = true;
-                  document.getElementById('allowanceBtn').innerHTML = `Approve`
-            }
+                        document.getElementById('swapBtn').disabled = true;
+                        document.getElementById('allowanceBtn').innerHTML = `Approve`
+                  }
+            })
+
+
       })
 
 
@@ -520,73 +529,113 @@ function doApprove() {
       })
 }
 
+
+//#region ========== SWAP Operation
+var onSwapOperation = false
+var swapDone = false
+var continueTrySwap = false
+var swapOperationTry = 0
 function doSwap() {
-      if (Number(document.getElementById('payTokenInput').value) == 0) { alarmInput('pay') } else {
-            if (Number(document.getElementById('receiveTokenInput').value) == 0) { alarmInput('receive') } else {
-                  //var inpVal = Number(document.getElementById('payTokenInput').value) * (10 ** payTokenDecimals);//Working here
-                  var inpVal = FixAmount(document.getElementById('payTokenInput').value, payTokenDecimals);//Working here
-                  var slpg = Number(slippage) * 0.01;
-                  var mnmurl = `${baseURL}pairPrice/${selectedChain}/${getAddressBySymbol(currentPayToken)}/${getAddressBySymbol(currentReceiveToken)}/${inpVal}/${slpg}`
-                  console.log(mnmurl)
-                  var swapReq = {
-                        selectedChain: selectedChain,
-                        currentPayToken: currentPayToken,
-                        currentReceiveToken: currentReceiveToken,
-                        inpVal: inpVal,
-                        slippage: slpg,
-                  }
-                  $.ajax({
-                        url: mnmurl,
-                        type: 'get',
-                        success: (res) => {
-                              console.info(res)
-                              var txData = (res.data.data)
-                              provider.getGasPrice().then((gasRes) => {
-                                    console.info(gasRes)
-                                    const rtx = {
-                                          "from": MyWalletAddress,
-                                          "to": spenderAddress, //#3 
-                                          "data": txData,
-                                          "value": "0",
-                                          "gasLimit": Number(res.data.gas) * 1.2,
-                                          "gasPrice": gasRes._hex
+      if (Number(document.getElementById('payTokenInput').value) * (10 ** payTokenDecimals) > Number(balanceAmount)) { window.alert("Requested amount is higher than balance.") } else {
+            if (Number(document.getElementById('payTokenInput').value) < allowanceAmount) { window.alert("Requested amount is lower than appproved amount.") } else {
+                  if (Number(document.getElementById('payTokenInput').value) == 0) { alarmInput('pay') } else {
+                        if (Number(document.getElementById('receiveTokenInput').value) == 0) { alarmInput('receive') } else {
+                              continueTrySwap = true
+                              var inpVal = FixAmount(document.getElementById('payTokenInput').value, payTokenDecimals);//Working here
+                              var slpg = Number(slippage) * 0.01;
+                              var mnmurl = `${baseURL}pairPrice/${selectedChain}/${getAddressBySymbol(currentPayToken)}/${getAddressBySymbol(currentReceiveToken)}/${inpVal}/${slpg}`
+                              console.log(mnmurl)
+                              var swapReq = {
+                                    selectedChain: selectedChain,
+                                    currentPayToken: currentPayToken,
+                                    currentReceiveToken: currentReceiveToken,
+                                    inpVal: inpVal,
+                                    slippage: slpg,
+                              }
+
+                              var swapInterval = setInterval(() => {
+                                    if (swapOperationTry < 5 && !swapDone && !onSwapOperation && continueTrySwap) {
+                                          onSwapOperation = true
+                                          $.ajax({
+                                                url: mnmurl,
+                                                type: 'get',
+                                                success: (res) => {
+                                                      console.info(res)
+                                                      var txData = (res.data.data)
+                                                      provider.getGasPrice().then((gasRes) => {
+
+
+                                                            console.info(gasRes)
+                                                            const rtx = {
+                                                                  "from": MyWalletAddress,
+                                                                  "to": spenderAddress, //#3 
+                                                                  "data": txData,
+                                                                  "value": "0",
+                                                                  "gasLimit": Number(res.data.gas) * 1.2,
+                                                                  "gasPrice": gasRes._hex
+                                                            }
+                                                            console.info(rtx)
+                                                            var infos = {
+                                                                  swapRequest: swapReq,
+                                                                  res0x: res,
+                                                                  Transaction: rtx,
+                                                                  time: new Date(Date.now())
+
+                                                            }
+                                                            recordInfo('SwapCall', 'Swap', infos);
+
+                                                            signer.sendTransaction(rtx).then((resX) => {
+                                                                  console.info(resX)
+                                                                  infos.results = resX
+                                                                  recordInfo('SwapResultSucess', 'Swap', resX);
+                                                                  setTimeout(() => {
+                                                                        provider.getTransactionReceipt(resX.hash).then((tres) => {
+                                                                              console.log('getTransactionReceipt for ' + resX.hash)
+                                                                              console.info(tres)
+                                                                              recordInfo('TransactionReceipt', 'Swap', tres);
+                                                                              onSwapOperation = false
+                                                                              if (tres.status == 1) {
+                                                                                    swapOperationTry = 0
+                                                                                    window.alert('Swap has been done. ㋡')
+                                                                                    clearInterval(swapInterval)
+                                                                                    continueTrySwap = false
+                                                                                    swapDone = true;
+                                                                              }
+                                                                        })
+                                                                  }, 7000);
+
+                                                            }).catch((err) => {
+                                                                  console.info(err)
+                                                                  infos.results = resX
+                                                                  recordInfo('SwapResultError', 'Swap', err);
+                                                                  onSwapOperation = false
+                                                            });
+                                                      })
+                                                },
+                                                error: (res) => {
+                                                      console.info(res)
+                                                      recordInfo('SwapCall Error', 'Swap', res);
+                                                      onSwapOperation = false
+                                                }
+                                          })
+                                          swapOperationTry++;
+                                    } else {
+                                          if (swapOperationTry == 5) {
+                                                window.alert('Swap failed. ☹')
+                                                onSwapOperation = false
+                                                continueTrySwap = false
+                                                clearInterval(swapInterval)
+                                          }
                                     }
-                                    console.info(rtx)
-                                    var infos = {
-                                          swapRequest: swapReq,
-                                          res0x: res,
-                                          Transaction: rtx,
-                                          time: new Date(Date.now())
+                              }, 3000);
 
-                                    }
-                                    recordInfo('SwapCall', 'Swap', infos);
-
-                                    signer.sendTransaction(rtx).then((resX) => {
-                                          console.info(resX)
-                                          infos.results = resX
-                                          recordInfo('SwapResultSucess', 'Swap', resX);
-                                          setTimeout(() => {
-                                                provider.getTransactionReceipt(resX.hash).then((tres) => {
-                                                      console.log('getTransactionReceipt for ' + resX.hash)
-                                                      console.info(tres)
-                                                      recordInfo('TransactionReceipt', 'Swap', tres);
-                                                })
-                                          }, 7000);
-
-                                    }).catch((err) => {
-                                          console.info(err)
-                                          infos.results = resX
-                                          recordInfo('SwapResultError', 'Swap', err);
-                                    });
-                              })
-                        },
-                        error: (res) => {
-                              console.info(res)
                         }
-                  })
+                  }
             }
       }
 }
+//#endregion
+
 
 // records the information as a log in the server's database
 function recordInfo(title, category, Data) {
@@ -640,6 +689,63 @@ function FixAmount(value, decimals) {
       return result
 }
 
+
+// This function adds decimal poing to the long string
+// Example showAmount 1200000000000000000 => 1.200000000000000000
+// in order to fix the inaccuracy of floats, the return value is in string 
+function showAmount(value, decimals) {
+      var theVal = value
+      var pointerIndex = 0
+      console.log('theVal in showAmount: ' + theVal)
+      var valueIndex = value.length - 1;
+
+      var result = ''
+      var effectiveLength = decimals + 2
+      if (value.length > effectiveLength) effectiveLength = value.length;
+      console.log('effectiveLength in showAmount: ' + effectiveLength)
+
+      var tempRes = ''
+      for (let i = effectiveLength; i >= 0; i--) {
+            //console.log('valueIndex :' + valueIndex)
+            tempRes = value[valueIndex]
+            if (valueIndex < 0) tempRes = '0';
+            if (pointerIndex == decimals) tempRes += '.';
+
+            result = tempRes + result
+            pointerIndex++
+            valueIndex--
+      }
+
+      console.log('first string result: ' + result)
+      console.log(' result length: ' + result.length)
+      var startingIndex = 0
+
+
+      for (let i = 0; i < result.length; i++) {
+            if (result[i] != '0') {
+                  startingIndex = i;
+                  break
+            }
+      }
+
+      var finalResult = result.substring(startingIndex, result.length)
+      console.log('res must be : ' + finalResult)
+
+      if (finalResult[0] == '.') {
+
+            console.log(' the . detected')
+            result = '0' + finalResult
+      } else {
+            result = finalResult
+
+      }
+      return result
+
+}
+
+function show(inp) {
+      console.log(showAmount(inp, 18))
+}
 
 // changes the button when wallet been connected
 function connectButtonChange(name) {
