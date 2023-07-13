@@ -430,17 +430,21 @@ function checkAllowance(contract, owner, decimals, symbol) {
       console.info(spenderAddress)
       balance(contract, owner).then((res) => {
             console.info(res)
-            balanceAmount = Number(res._hex).toString()
+            //balanceAmount = Number(res._hex).toString()
+            balanceAmount = BigInt(res._hex).toString()
             console.log('wallet balance amount: ' + balanceAmount)
             allowance(contract, owner, spenderAddress).then((res) => {
                   console.info(res)
-                  allowanceAmount = Number(res._hex).toString()
-                  console.log('@@@ Allowance: ' + toFixed(allowanceAmount))
+                  allowanceAmount = (BigInt(res._hex)).toString()
+                  console.log('@@@ Allowance: ' + allowanceAmount)
+                  console.log('@@@ balanceAmount: ' + balanceAmount)
+
                   document.getElementById('allowTXT').style.display = 'block'
                   document.getElementById('allowWaiting').style.display = 'none'
                   document.getElementById('allowanceBtn').addEventListener('click', doApprove)
 
-                  if (allowanceAmount > 0) {
+                  if (Number(allowanceAmount) > 0) {
+                        console.log('@@@ allowanceAmount > 0');
                         var amount = allowanceAmount;
                         if (Number(balanceAmount) < Number(allowanceAmount)) { amount = balanceAmount }
                         document.getElementById('allowTXT').innerHTML = `You can Swap up to ${showAmount(amount, decimals) + ' ' + symbol + 's'}`
@@ -536,11 +540,30 @@ var swapDone = false
 var continueTrySwap = false
 var swapOperationTry = 0
 function doSwap() {
-      if (Number(document.getElementById('payTokenInput').value) * (10 ** payTokenDecimals) > Number(balanceAmount)) { window.alert("Requested amount is higher than balance.") } else {
-            if (Number(document.getElementById('payTokenInput').value) < allowanceAmount) { window.alert("Requested amount is lower than appproved amount.") } else {
+      var inputValue = FixAmount(document.getElementById('payTokenInput').value, payTokenDecimals);
+      console.log('doswap inputValue: ' + inputValue)
+      console.log('doswap balanceAmount: ' + balanceAmount)
+      if (Number(inputValue) > Number(balanceAmount)) {
+            // ===> ERROR:   Requested amount is more than the balance
+            window.alert("Requested amount is higher than the balance.")
+            console.log('doswap inputValue: ' + inputValue)
+            console.log('doswap balanceAmount: ' + balanceAmount)
+      } else {
+            if (Number(inputValue) > Number(allowanceAmount)) {
+                  // ===> ERROR:   Requested amount is more than the allowance
+
+                  window.alert("Requested amount is higher than the appproved amount.")
+                  console.log('doswap inputValue: ' + inputValue)
+                  console.log('doswap allowanceAmount: ' + allowanceAmount)
+
+
+            } else {
                   if (Number(document.getElementById('payTokenInput').value) == 0) { alarmInput('pay') } else {
                         if (Number(document.getElementById('receiveTokenInput').value) == 0) { alarmInput('receive') } else {
+
+                              // Main swap Operation
                               continueTrySwap = true
+                              console.log('Swap Cycle: ' + swapOperationTry)
                               var inpVal = FixAmount(document.getElementById('payTokenInput').value, payTokenDecimals);//Working here
                               var slpg = Number(slippage) * 0.01;
                               var mnmurl = `${baseURL}pairPrice/${selectedChain}/${getAddressBySymbol(currentPayToken)}/${getAddressBySymbol(currentReceiveToken)}/${inpVal}/${slpg}`
@@ -600,7 +623,12 @@ function doSwap() {
                                                                                     clearInterval(swapInterval)
                                                                                     continueTrySwap = false
                                                                                     swapDone = true;
+                                                                              } else {
+                                                                                    window.alert('Swap faild. ☹ \nRetry after a few minutes. \nCheck console for the error.')
                                                                               }
+                                                                              swapOperationTry = 0
+                                                                              clearInterval(swapInterval)
+                                                                              continueTrySwap = false
                                                                         })
                                                                   }, 7000);
 
@@ -609,6 +637,8 @@ function doSwap() {
                                                                   infos.results = resX
                                                                   recordInfo('SwapResultError', 'Swap', err);
                                                                   onSwapOperation = false
+                                                                  continueTrySwap = false
+
                                                             });
                                                       })
                                                 },
@@ -665,11 +695,15 @@ function FixAmount(value, decimals) {
       console.log('theVal ' + theVal)
       var decIndex = -1;
       for (let i = 0; i < theVal.length; i++) {
+            //console.log('theVal[i]: ' + theVal[i])
             if (theVal[i] == '.') {
                   console.log('decimal point is in the index of: ' + i)
                   decIndex = i
             }
+      }
 
+      if (decIndex == -1) {
+            return theVal
       }
 
       if (theVal.length - decimals - 1 > decIndex) {
@@ -809,3 +843,4 @@ function toFixed(x) {
       }
       return x;
 }
+
