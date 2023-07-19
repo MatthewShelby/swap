@@ -42,11 +42,11 @@
                                           </div>
                                     </div>
                               </span>
-                              <span>
-                                    <button class="dropbtn" onclick="connectWallet()" id="cn-wlt-btn">
+                              <span class="mob-hor-center">
+                                    <button class="dropbtn mob-meta" onclick="connectWallet()" id="cn-wlt-btn">
                                           <span class="cnw vercenter"> Connect Wallet</span>
                                     </button>
-                                    <div class="dropdiv" id="cn-wlt-div">
+                                    <div class="dropdiv  mob-meta" id="cn-wlt-div">
                                           <span class="cnw vercenter">
                                                 <span>
                                                       <img src="assets/images/Icons/mmw.svg" alt="" id="cn-wlt-icon">
@@ -353,5 +353,38 @@
 
       </script>
 </body>
+<style>
+      @media only screen and (max-device-width: 915px) {
+
+            #chainbox {
+                  display: block;
+
+            }
+
+            .mob-meta {
+                  margin-top: 1rem;
+                  width: fit-content;
+            }
+
+            .mob-hor-center {
+                  text-align: center;
+                  justify-content: space-around;
+                  display: flex;
+                  padding-top: 1rem;
+            }
+
+            .label-1 {
+                  font-size: 2rem;
+            }
+
+            #selectedChainName {
+                  font-size: 2rem;
+            }
+
+            .cnw {
+                  font-size: 2rem;
+            }
+      }
+</style>
 
 </html>
