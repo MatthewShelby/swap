@@ -135,7 +135,7 @@
                                           step="any">
                                     </input>
                               </div>
-                              <div style="padding: 4px 16px; " class="row vercenter around">
+                              <div style="padding: 4px 16px; " class="row vercenter around shwitcher-row">
                                     <span style="width: 45%;">
                                           <hr>
                                     </span>
@@ -345,8 +345,11 @@
 
             function bg() {
                   var bgnum = Math.floor(Math.random() * 3) + 1
-                  console.log(document.getElementById('bodybg').style.backgroundImage = 'url("./assets/images/background/bg(' + bgnum + ').png"')
-
+                  if (screen.width > 915) {
+                        document.getElementById('bodybg').style.backgroundImage = 'url("./assets/images/background/bg(' + bgnum + ').png"'
+                  } else {
+                        document.getElementById('bodybg').style.backgroundImage = 'url("./assets/images/background/mbg(' + bgnum + ').png"'
+                  }
             }
 
 
@@ -383,6 +386,79 @@
 
             .cnw {
                   font-size: 2rem;
+            }
+
+            #tokenOP {
+                  margin: 3%;
+            }
+
+            .he-heading {
+                  font-size: 3rem;
+            }
+
+            .he-text {
+                  font-size: 2rem;
+            }
+
+            .settingImg {
+                  width: 60px;
+            }
+
+            .tokenBox {
+                  font-size: 2rem;
+            }
+
+            .amuText {
+                  font-size: 4rem;
+                  margin-top: 32px;
+            }
+
+            .tokenBoxImg {
+                  max-width: 32px;
+                  margin-right: 16px;
+                  margin-left: 4px;
+            }
+
+            .shwitcher-row span {
+                  width: 40% !important;
+            }
+
+            .shwitcher-row img {
+                  max-width: 96px !important;
+                  min-width: 64px !important;
+                  width: 96px;
+            }
+
+            .explain {
+                  font-size: 2rem;
+                  margin: 16px 0px;
+            }
+
+            .op-buttons {
+                  display: block;
+                  justify-content: end;
+                  max-width: 300px;
+            }
+
+            .op-buttons button {
+                  font-size: 3rem;
+                  margin-bottom: 0.6rem;
+            }
+
+            .fott-p {
+                  color: #f1f1f1;
+                  max-width: fit-content;
+                  font-size: 2.7rem;
+                  margin-top: 6rem;
+                  opacity: 0.8;
+            }
+
+            .mob-br {
+                  display: block;
+            }
+
+            .horcenter {
+                  margin-top: 6rem;
             }
       }
 </style>
