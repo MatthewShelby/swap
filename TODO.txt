@@ -18,3 +18,4 @@ TO address should dynamicly change to best router address. main.js => #3
 
 Ideas:
 option to define a recipient address different than the user. (If its possiable with 0X. It may charge extra fee)
+
