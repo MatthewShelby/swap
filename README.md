@@ -1,10 +1,12 @@
 # Swap - Simplifying Crypto Swaps
 
 Welcome to Swap, a platform dedicated to simplifying crypto swaps. This repository contains the smart contract source code and documentation for the Swap project.
+ 
 
 ## Overview
 
 Swap is a user-friendly platform designed to streamline cryptocurrency swaps. It allows users to easily exchange one cryptocurrency for another using a decentralized and secure process. Whether you're a seasoned trader or new to the crypto world, Swap makes swapping cryptocurrencies a hassle-free experience.
+ 
 
 ## Features
 
@@ -12,6 +14,7 @@ Swap is a user-friendly platform designed to streamline cryptocurrency swaps. It
 - Approve the operator to increase the allowance for smooth swap operations.
 - Execute swaps after confirming the allowance, ensuring secure and reliable transactions.
 - Detailed documentation to guide users through the swap process.
+ 
 
 ## Getting Started
 
@@ -26,9 +29,18 @@ Swap Process:
 4. Approve the operator to increase the allowance for seamless swap operations.
 5. Initiate the swap, which will be executed using the approved allowance.
 6. Confirm the transaction through your wallet.
+ 
+  
+## Roadmap
 
 Next Step: The next step in our roadmap is to expand Swap's functionality by adding support for the Ethereum blockchain, allowing users to swap on both BSC and Ethereum.
+ 
 
+## Terms of Use
+
+Users are subject to the conventional DeFi terms, as specified by MetaMask and leading cryptocurrency platforms.
+
+ 
 ## Contact
 
 For any inquiries or assistance, feel free to reach out through the following channels:
@@ -37,10 +49,9 @@ For any inquiries or assistance, feel free to reach out through the following ch
 - Instagram
 - YouTube
 - For technical queries: matthewShelB@gmail.com
-
+ 
+  
+   
 Thank you for considering Swap! Start swapping cryptocurrencies with ease and efficiency.
 
-## Terms of Use
-
-Users are subject to the conventional web3 terms, as specified by MetaMask and leading cryptocurrency platforms.
 
