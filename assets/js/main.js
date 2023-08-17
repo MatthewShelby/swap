@@ -550,11 +550,9 @@ function doSwap() {
       } else {
             if (Number(inputValue) > Number(allowanceAmount)) {
                   // ===> ERROR:   Requested amount is more than the allowance
-
                   window.alert("Requested amount is higher than the appproved amount.")
                   console.log('doswap inputValue: ' + inputValue)
                   console.log('doswap allowanceAmount: ' + allowanceAmount)
-
 
             } else {
                   if (Number(document.getElementById('payTokenInput').value) == 0) { alarmInput('pay') } else {
@@ -585,7 +583,6 @@ function doSwap() {
                                                       console.info(res)
                                                       var txData = (res.data.data)
                                                       provider.getGasPrice().then((gasRes) => {
-
 
                                                             console.info(gasRes)
                                                             const rtx = {
@@ -752,7 +749,6 @@ function showAmount(value, decimals) {
       console.log('first string result: ' + result)
       console.log(' result length: ' + result.length)
       var startingIndex = 0
-
 
       for (let i = 0; i < result.length; i++) {
             if (result[i] != '0') {
