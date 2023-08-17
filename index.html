@@ -269,13 +269,9 @@
             $(document).ready(() => {
                   waitingOn()
                   console.log('Ready => Start')
-
-                  //waitingOff()
                   addEf()
                   checkHealth()
                   bg()
-                  //ChsinSelectBSC()
-                  //waitingOff()
             })
 
             function getDecimals(n) {
@@ -289,23 +285,10 @@
             function changeWallet() {
                   window.ethereum.request({
                         method: 'wallet_switchEthereumChain', params: [{ chainId: '0x1' }]
-                        // method: "wallet_addEthereumChain",
-                        // params: [{
-                        //       chainId: "0x1",
-                        //       rpcUrls: ["https://mainnet.infura.io/v3/"],
-                        //       chainName: "Ethereum Mainnet",
-                        //       nativeCurrency: {
-                        //             name: "ETH",
-                        //             symbol: "ETH",
-                        //             decimals: 18
-                        //       },
-                        //       blockExplorerUrls: ["https://etherscan.io"]
-                        // }]
                   }).then((res) => {
                         console.info(res)
                   });
             }
-
 
             function bg() {
                   var bgnum = Math.floor(Math.random() * 3) + 1
@@ -315,9 +298,6 @@
                         document.getElementById('bodybg').style.backgroundImage = 'url("./assets/images/background/mbg(' + bgnum + ').png"'
                   }
             }
-
-
-
       </script>
 </body>
 <style>
