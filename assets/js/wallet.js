@@ -46,6 +46,7 @@ function checkForWallet(alert) {
                                     checkAllowance(payTokenAddress, MyWalletAddress, 18, currentPayToken)
                               } else {
                                     console.log('## HERE - 9   diffrent chain id')
+                                    
                                     window.ethereum.request({
                                           method: "wallet_addEthereumChain",
                                           params: [{

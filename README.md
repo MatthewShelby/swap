@@ -20,7 +20,7 @@ Swap is a user-friendly platform designed to streamline cryptocurrency swaps. It
 
 Prerequisites: Ensure you have an Ethereum-compatible wallet (e.g., MetaMask) and assets on the Binance Smart Chain (BSC) for transactions.
 
-Access the Platform: Visit the official website [https://matthewshelby.github.io/swap](https://matthewshelby.github.io/swap) to access the Swap platform.
+Access the Platform: Visit the official website [https://swap.mtshby.com](https://swap.mtshby.com/)  to access the Swap platform.
 
 Swap Process:
 1. Connect your Ethereum-compatible wallet to the platform.
@@ -45,10 +45,7 @@ Users are subject to the conventional DeFi terms, as specified by MetaMask and l
 
 For any inquiries or assistance, feel free to reach out through the following channels:
 
-- Discord
-- Instagram
-- YouTube
-- For technical queries: matthewShelB@gmail.com
+- For technical queries: [matthewShelB@gmail.com](mailto:matthewShelB@gmail.com)
  
   
    

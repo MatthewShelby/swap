@@ -20,7 +20,7 @@ var currentPrice = 0
 var currentPayToken = ''
 var currentReceiveToken = ''
 var isFirstPaySet = true;
-var isFirstReceiveSet = true;
+var isFirstReceiveSet = true; 
 
 // Number of calls for price data
 var tryfetchPairPrice = 0;
